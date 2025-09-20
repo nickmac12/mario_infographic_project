@@ -298,3 +298,69 @@
                                 let label = context.label || '';
                                 if (label) {
                                     label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(context.parsed);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const slider = document.getElementById('salePriceSlider');
+        const sliderValueDisplay = document.getElementById('sliderValueDisplay');
+        const totalRevenueDisplay = document.getElementById('totalRevenueDisplay');
+        const netProfitDisplay = document.getElementById('netProfitDisplay');
+        const eachPartnerProfitDisplay = document.getElementById('eachPartnerProfitDisplay');
+        const projectRoiDisplay = document.getElementById('projectRoiDisplay');
+        
+        const TOTAL_COSTS = 526600;
+        const CLOSING_COST_RATE = 0.06;
+        const PROFIT_SHARE = 0.50;
+
+        const formatCurrency = (value) => {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(value);
+        };
+
+        function updateProfitScenario() {
+            const salePricePerLot = parseInt(slider.value);
+            
+            const totalRevenue = salePricePerLot * 2;
+            const closingCosts = totalRevenue * CLOSING_COST_RATE;
+            const grossProfit = totalRevenue - TOTAL_COSTS;
+            const netProfit = grossProfit - closingCosts;
+            const projectRoi = (netProfit / TOTAL_COSTS) * 100;
+            
+            const eachPartnerProfit = netProfit * PROFIT_SHARE;
+
+            sliderValueDisplay.innerText = formatCurrency(salePricePerLot);
+            totalRevenueDisplay.innerText = formatCurrency(totalRevenue);
+            netProfitDisplay.innerText = formatCurrency(netProfit);
+            projectRoiDisplay.innerText = projectRoi.toFixed(1) + '%';
+            eachPartnerProfitDisplay.innerText = formatCurrency(eachPartnerProfit);
+
+            // Add/remove text color for negative/positive values
+            const elementsToColor = [netProfitDisplay, projectRoiDisplay, eachPartnerProfitDisplay];
+            if (netProfit < 0) {
+                elementsToColor.forEach(el => {
+                    el.classList.add('text-red-600');
+                    el.classList.remove('text-green-600', 'text-[#F26333]', 'text-gray-800');
+                });
+            } else {
+                elementsToColor.forEach(el => {
+                    el.classList.add('text-green-600');
+                    el.classList.remove('text-red-600', 'text-[#F26333]', 'text-gray-800');
+                });
+            }
+        }
+
+        slider.addEventListener('input', updateProfitScenario);
+        
+        updateProfitScenario();
+    });
+</script>
+</body>
+</html>
