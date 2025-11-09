@@ -20,12 +20,13 @@
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            height: 250px;
-            max-height: 300px;
+            height: 200px; /* Reduced from 250px for mobile */
+            max-height: 250px; /* Reduced from 300px for mobile */
         }
         @media (min-width: 768px) {
             .chart-container {
                 height: 280px;
+                max-height: 300px; /* Restored for desktop */
             }
         }
         /* Custom Slider Styles */
